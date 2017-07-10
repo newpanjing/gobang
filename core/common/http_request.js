@@ -239,9 +239,13 @@ var httpsGet = function (str, data, callback, headers) {
 
             })
         } else {
+            var str = "";
             res.on('data', function (buffer) {
-                callback(buffer.toString());
+                str += buffer.toString();
             });
+            res.on("end", function () {
+                callback(str);
+            })
         }
     });
     //req.write(postData);
