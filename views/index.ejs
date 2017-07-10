@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="renderer" content="webkit"/>
+    <style type="text/css">
+        <%include ../public/css/style.css%>
+    </style>
+    <!--<link rel="stylesheet" type="text/css" href="/css/style.css">-->
+</head>
+<body>
+<div id="container">
+    <div id="mask"></div>
+    <div id="user" class="noselect">
+        <div id="enemy" class="user-info"></div>
+        <div id="me" class="user-info"></div>
+    </div>
+    <div id="parent">
+        <div id="mask-content">
+            <h1 id="mask-title">你赢了</h1>
+            <a href="javascript:void(0)" class="btn">换桌</a>
+            <a href="javascript:void(0)" onclick="start()" class="btn">开始</a>
+        </div>
+    </div>
+    <div id="action">
+        <div class="room">
+            <span>房间号 -</span>
+            <span id="roomId">1</span>
+        </div>
+        <div>
+            <a href="javascript:void(0)" class="btn">认输</a>
+            <a href="javascript:void(0)" class="btn" id="drawBtn">求和</a>
+        </div>
+        <div>
+            <div class="msgbox" id="msgbox">
+            </div>
+            <div class="input">
+                <input type="text" id="inputbox" placeholder="输入聊天内容"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="application/javascript">
+    (function (document, window) {
+        var _user = {
+            uid: '<%= user ? user.id : '' %>',
+            nickName: '<%= user ? user.name : '' %>',
+            signin: '<%= user != undefined %>'
+        };
+
+        <% include ../public/js/socket.io.js %>
+        <% include ../public/js/query.js %>
+        <% include ../public/js/dialog.js %>
+        <% include ../public/js/gobang.js %>
+        <% include ../public/js/socket.js %>
+        <% include ../public/js/game.js %>
+
+    })(document, window);
+</script>
+<!--<script type="application/javascript" src="/js/socket.io.js?v=1"></script>-->
+<!--<script type="application/javascript" src="/js/game.js"></script>-->
+</body>
+</html>

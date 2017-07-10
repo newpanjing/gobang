@@ -1,0 +1,167 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background: rgb(230, 234, 235);
+}
+
+a {
+    color: #00B7FF;
+}
+
+canvas {
+    webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+#mask,.mask {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.1;
+    z-index: 2;
+}
+
+#mask-content,.mask-content {
+    transition: all 1s;
+    display: block;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    left: 50%;
+    top: -200px;
+    margin-left: -150px;
+    margin-top: -150px;
+    z-index: 3;
+    text-align: center;
+    color: white;
+}
+
+#parent {
+    position: relative;
+    float: left;
+}
+
+.btn {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background-color: #419856;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+.btn:hover {
+    background-color: #3e8c4d;
+}
+
+.btn:active {
+    background-color: #2c5e32;
+}
+
+#user {
+
+    float: left;
+    width: 200px;
+    background-color:#e6bb86;
+}
+#user a{
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    margin-left: 5px;
+    font-size: 14px;
+}
+#action {
+    float: left;
+    width: 200px;
+    background-color: #e6bb86;
+}
+#container{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+.user-info{
+    height:240px;
+    text-align: center;
+    border:2px solid #6e5840;
+    color: #3c3220;
+    line-height: 25px;
+    margin: 15px;
+    border-radius: 10px;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+
+.user-info .avatar{
+    max-width: 100px;
+    max-height: 100px;
+    margin-top: 10px;
+    border-radius: 50px;
+}
+.icon-white{
+    display: inline-block;
+    height: 26px;
+    width: 26px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAEu0lEQVRIx42W228UVRzHP+fMmdnd3mgppVYsTQhyC8VgSLw8EEl8M8YHQuKbD8TEF0xIfDHhH+BF4xPxCTDeovJiihgl3oLyAFrNAiUFw6WWdtltt3Tb3dndOef4MGdmd4uKc7LJzOzM5/f7fn+/OeeIcTqPzxAItoM4t7v3BXbbgN3RVWmjyfDySxex8VNr3wKx9tYZBFOjg0e9g95mAYDBYtEYGvPRV+V3X73yv0Bv9W85lnvD6/aIMRYwGAwaTUTTVD659/aJmUeA3nmx/wN/ROEhEQQ0sC4fjSHCENEkXC29efxkIjM+vOH0NC8+Pbz+40x/Bh9FD6MM0EcdkEgkAokEBDLIvbKn59wPWf0PoLz48tDwqcAPUPgoRpCAh08d4UaMiSV3Pb+r6/yPLVQKOv7Mk5/7uQSj6CGxuu5ejxECi0UAfc8O3c9PStMB2tx/8OvsSEBAgMJDoVAA1IiwCKwzPoFaEBsPlC4W7sS3JUDeO3IkuzV+WSLxEFSpUadCiMBDOI88F8bDwyPIPXes8licujcMvDy6/7Sf8/HdA7G5EU1MmkeckUiv4tE3VrixcI0mSMirg4fVgHIxRVpVJwDhEKRmx895eHhi/+uVMUT8X1f/IQlIFH5alzhi2m4um/heIl8iGRvv20sOJBwdDXbGpc2mEtoHLq8ku6RucVbZYNeBaAgh82rf04mQDCaNa50/tgOdoITLSwBb9jSfwJP463YkUYL0EzWYFGVSLKnRiVgQDAyZTWQVSmxIuxMPjcEiO6pj2rJLeilGSQS5LjbSpZD0tiR4GCQ4iS1Qp2et1rRYfF+sI6MQUS2JHRGwkn4CncabNkjLN4BQ2xxKwcqidY7U6MOi08RZU0FS5+KzONRKQwiExMxNJz4sATkMGoN295KxFtcaxVWaWEn0XT4yGoulQZn+tjolCFz1zJrWiK+nF2WFpqRxofRgOp5INSWqrOvIpYW06cukIjWVxs2iXCSU41G9fuMb7SZTSwFJrkNOJ9A6gHHP/1HSq2qGqoRG5cSZSjmZ3jXzQHYNpCWNtFkNhtCc/0sU5H3qEuzK3MLPX0REDqRZpo63Rpx2kjStkJpf7hWLaooiWsJ4VC9+eGZuNkFZNCGhO0/WNNxaYtOFSbNQn7gjZv08S25imw3J3J7ftz/j0/bRJl0Ud3nLJU0csmrev1YsBN/LSylo2Babqyzqp/ZK2T4L2VROXHCd5hIR2Y9uXCnI34NvuUuUTv7rw5IpVufMtm0ZlRS53R0Nrk6x/Jo5NX25IKZzE1yj2rEchcuhWVi9Ut26pTfb3nK6bcHWDlOqvXd1epFb2bPiV8px2imoh77yg3ClceF+NTvSn1GJqdb9krEanb178lb5gbienRCXKKEfWrKx3eVKWevbyz+Vap70ejNWJMJi6M0HF+ZP/Tm1EBW937ITYpIS0b/tRkStpz4u9vpb5abuwZ0b13d1e4OZ5eZSc6l5fWW5bkO7LGf8y94kd6i0byMe2tac5jVV3RDtENvFmNwg+ghQSKzVRCzLWTWtppihTOMR+yN3+PQ2hpqPy0EzIHL4MqSmSqrAAmVWaHRuaf4DlAfGBR5ZMig8DE0ahER5+89bv78B7zrviBBp0JcAAAAASUVORK5CYII=");
+    background-size: cover;
+    margin-bottom: -7px;
+}
+.icon-black {
+    display: inline-block;
+    height: 26px;
+    width: 26px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAEXElEQVRIx32Wy49TZRjGf+/3nZ5L2xmGTmVmFESEEDXQDCYiiSYGE+NgXBnd+Ae4MsbMX+DOuDC6MwYXJuLGjYmKK2IiCYmABSwERS4TKLXT6TDQmU7vp5+Lnp72TDucb3Nu33Oe53lvRwyPP8TmMMumMP5pJjyztgV4jQUWZF4AULBsLvAjpyn3no8QMCMLzQdSFCPGMraxjWW0UUb663vZO9h3OFxqhMnr5ORrPbuTaTzAp9uD73/4fXNTfWE7I/uiFOVD+VLrJ4jzkE06dMeINoC66LxbuzfsUQRIPpdFj4OsU6JJd5wT4T0pegv7rw5eGJImi7I4xTzrFKmzm2lAto2mmWv8XNozeCFkJAvyS0K/yAp3afIZx7jFSf4Yy6p/x7qw74T7sHep+tki38R0hg0KNJnnEFfIMoF+bI75R5c/xotKW+SpvWgK1IAOl8lyhev422VZsOofNQ72clF/AsgO+cH1nqdECR8o0yTPHUpjPZIQCHDbyR1nqQeM5D1Su2myRizw4BzXWHsMzIBX4y32EOtLe0exkwpVXhroZ7QUQh4IgkKAbqryBlOgQDTHE8Amuzi0TXwGrhBADK5rx0mjFLAP16HBJkfREQZmhEufxwBI0d3DDK4F8ixoWrQ4gD+SNxIxeNilvlN+ihniFsi0wdDCR0hvE6EBoAkBFQoFGJuduBYofDq0MTyIeCQRPgzZDBoLjUbRoSsksBWoKrTpYMgxx2TEWgm+KmGcBI2Di0ucBEk0yieGVuDdhBZthMvc5dWItVFjDYLGxiFOkgQJJugQqwYl8nReNjp0gBZf8QrxiAiJAGtcPOLEiZNkEk0bu0ILXwFtfaFDE1Bc5AwnhmT0z3qR1Lg4uAHMBJNsICQKVGkqoO38Cm18QPidAvuH5AgmiFRPlIcXwtisEFuPrbJKXUHOPPmT9aBLJ4jWn7SY21JRghDDxg5MTpAkyR0Mk3kqrLCpAJzViW8FQzfYfp8KiSGXFILGwsbBxcMjSZIy94lVJ5YosEyrV7TVuVPWshr0Y+rUtlhuYeGEgY9TI4ti6jYr3OQBRgHkOjo/+6m0dAAlI4FXaOxQnEeDcxgS+fg9bnGD9UGHrEye2XUKo4PRJyP1bmGF4kr8RgNnLXWDPFcp0AmBch3yqe/Sp3XXCoZiNIt0CAV/k8XHfpS+SpEs16hGZ3+V6+mTdrP8tjiGLj56SyoKUGIFgxAvpG6wwiXOU+yFOwTKmcwa2UnLfbT6Zm23phtMWRXUfJ0abRSg6zuWEgVKXOIsSzTHTNqMxS7mOVZ/+eGRRhoRCNtGD1A3kvcmilIlT5bz3Kbeb19bZn9GM8VBjvCCv3fz6Ua6lRTpJHVTta2mvREv25vUKbPEX+Qo5JqR2Z/Z2ss8ZjjAczxDiiQuMTSGNi1qVCjyL/9wn0pYCtsA9YxJMM0Ms8wyhYdDlzobrPIfy5Sp0B7zW5PZbphaJEjiEEMDLVrUqQ5ciR7/A4TniIgLyLLcAAAAAElFTkSuQmCC");
+    background-size: cover;
+    margin-bottom: -7px;
+}
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently*/
+}
+.msgbox{
+    height: 360px;
+    border: 2px solid #6e5840;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px;
+    overflow-y: auto;
+    font-size: 12px;
+}
+.room,.input{
+    border: 2px solid #6e5840;
+    text-align: center;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px;
+}
+.input{
+    text-align: left;
+}
+.input input{
+    border: none;
+    background-color: inherit;
+    outline: none;
+    height: 25px;
+    line-height: 25px;
+    width: 170px;
+}
+.disabled,.disabled:active{
+    background-color: rgba(92,98,108,0.82);
+    pointer-events: none;
+    cursor: default;
+}
