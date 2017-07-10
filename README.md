@@ -2,6 +2,8 @@
 `js版联网对战五子棋，基于canvas+socket.io
 服务端nodejs`
 
+>在线演示地址：http://gobang.88cto.com
+
 ## 功能：
 >1.多人在线对战
 >2.断线重连机制
