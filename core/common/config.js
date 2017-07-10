@@ -25,7 +25,7 @@ var config = {
     },
     websocket: {
         port: 8000,
-
+        host: 'http://gobang.88cto.com:8000'
     }
 };
 //导出配置

@@ -30,7 +30,9 @@ function Dialog(option, cb) {
         var obj = this;
         if (option.timeout) {
             setTimeout(function () {
-                cb(obj);
+                if (cb) {
+                    cb(obj);
+                }
                 obj.close();
             }, option.timeout);
         }

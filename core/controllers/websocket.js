@@ -152,8 +152,10 @@ function onDraw(data) {
  * @param data
  */
 function onAction(data) {
-    sendMessage("action", data);
-    rooms.clearBorad(data.roomId);
+    sendMessage("action", data.enemyUid, data);
+    if (data.type == 0) {
+        rooms.clearBorad(data.roomId);
+    }
 }
 
 exports.start = function () {

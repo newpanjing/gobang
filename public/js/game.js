@@ -1,7 +1,7 @@
 window.onload = function () {
 
     //网络部分
-    var host = "http://gobang.88cto.com:8000";
+    var host = _config.host;
 
     var Socket = {
         connection: null,
@@ -18,12 +18,14 @@ window.onload = function () {
                 Socket.match();
 
             });
+
+            this.connection.on("restart", function (data) {
+                Gobang.restart();
+            });
             this.connection.on('disconnect', function (data) {
                 console.log("断开连接！")
             });
-            this.connection.on("message", function (data) {
-                console.log(data);
-            });
+
 
             this.connection.on("join", function (data) {
                 Socket.onJoin(data);
@@ -37,9 +39,7 @@ window.onload = function () {
 
                 Socket.onPices(data);
             });
-            this.connection.on("restart", function (data) {
-                Gobang.restart();
-            });
+
 
             this.connection.on("message", function (data) {
                 Socket.onMessage(data);
@@ -49,6 +49,9 @@ window.onload = function () {
                 Socket.onDraw(data);
             })
 
+            this.connection.on("action", function (data) {
+                Socket.onAction(data);
+            })
 
         },
         match: function () {
@@ -104,16 +107,34 @@ window.onload = function () {
             msgbox.appendChild(div);
             msgbox.scrollTop = msgbox.scrollHeight;
 
+        },
+        action: function (type) {
+            this.connection.emit("action", {
+                uid: _user.uid,
+                nickName: _user.nickName,
+                roomId: roomId,
+                enemyUid: enemyUid,
+                type: type,//0 同意，1 拒绝
+            })
+        },
+        onAction: function (data) {
+
+            var msg = "";
+            if (data.type == 0) {
+                //同意，擦出桌面
+                msg = data.nickName + "同意和棋！";
+                //擦除棋盘
+                Gobang.restart();
+
+            } else {
+                msg = data.nickName + "不同意和棋！";
+            }
+            new Dialog({title: msg, timeout: 2000}).show();
+
         }
 
     }
 
-
-    var enemyUid = null;
-//匹配成功
-    var picesType = 0;
-
-    var _lastType = -1;
 //玩家加入
     Socket.onJoin = function (data) {
 
@@ -185,7 +206,7 @@ window.onload = function () {
     };
 
     Socket.onMessage = function (data) {
-        appendMessage(data.nickName, data.msg);
+        Socket.appendMessage(data.nickName, data.msg);
     };
 
     Socket.init(host);
@@ -318,13 +339,15 @@ window.onload = function () {
                 handler: function () {
 
                     //发送通知，游戏重新开始
-                    Socket.action({});
+                    Socket.action(0)
+                    //擦除棋盘
+                    Gobang.restart();
                     dialog.close();
                 }
             }, {
                 text: '拒绝',
                 handler: function () {
-
+                    Socket.action(1);
                     dialog.close();
                 }
             }]
