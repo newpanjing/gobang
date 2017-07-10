@@ -118,19 +118,6 @@ window.onload = function () {
             })
         },
         onAction: function (data) {
-
-            var msg = "";
-            if (data.type == 0) {
-                //同意，擦出桌面
-                msg = data.nickName + "同意和棋！";
-                //擦除棋盘
-                Gobang.restart();
-
-            } else {
-                msg = data.nickName + "不同意和棋！";
-            }
-            new Dialog({title: msg, timeout: 2000}).show();
-
         }
 
     }
@@ -355,6 +342,44 @@ window.onload = function () {
     }
 
 
+    Socket.onAction = function (data) {
+
+        var msg = "";
+        if (data.type == 0) {
+            //同意，擦出桌面
+            msg = data.nickName + "同意和棋！";
+            //擦除棋盘
+            Gobang.restart();
+
+        } else if (data.type == 1) {
+            msg = data.nickName + "不同意和棋！";
+        } else if (data.type === 2) {
+            msg = data.nickName + "已认输！";
+            //擦除棋盘
+            Gobang.restart();
+        }
+        new Dialog({title: msg, timeout: 2000}).show();
+    }
+
+    $("#towelBtn").onclick = function () {
+        var dialog = new Dialog({
+            title: '您确定要认输吗？',
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Socket.action(2);
+                    //擦除棋盘
+                    Gobang.restart();
+                    dialog.close();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    dialog.close();
+                }
+            }]
+        }).show();
+    }
 }
 
 window.start = function () {

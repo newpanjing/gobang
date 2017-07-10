@@ -17,8 +17,10 @@ function $(id) {
     obj.hide = function () {
         this.style.display = "none";
     }
-    obj.text = function (text) {
-        this.innerText = text;
+    if (obj.nodeName != 'A') {
+        obj.text = function (text) {
+            this.innerText = text;
+        }
     }
     return obj;
 }

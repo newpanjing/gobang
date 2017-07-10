@@ -154,6 +154,12 @@ function onDraw(data) {
 function onAction(data) {
     sendMessage("action", data.enemyUid, data);
     if (data.type == 0) {
+
+        //数据库记录更新
+
+        rooms.clearBorad(data.roomId);
+    } else if (data.type == 2) {
+        //投降
         rooms.clearBorad(data.roomId);
     }
 }
