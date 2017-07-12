@@ -53,6 +53,10 @@ window.onload = function () {
                 Socket.onAction(data);
             })
 
+            this.connection.on("offline", function (data) {
+                Socket.onOffline(data);
+            })
+
         },
         match: function () {
             if (_user.uid == '') {
@@ -118,7 +122,18 @@ window.onload = function () {
             })
         },
         onAction: function (data) {
+        },
+        sendHeartbeat: function () {
+
+            this.connection.emit("heartbeat", {
+                uid: _user.uid,
+                roomId: roomId
+            });
+        },
+        onOffline: function () {
+
         }
+
 
     }
 
@@ -199,7 +214,9 @@ window.onload = function () {
     Socket.init(host);
 
     function showUser(user, id, type) {
-
+        if (!user) {
+            document.getElementById(id).innerHTML = "";
+        }
         //胜率=赢/（输+赢+平局）
         if (!user) {
             return;
@@ -361,6 +378,20 @@ window.onload = function () {
         new Dialog({title: msg, timeout: 2000}).show();
     }
 
+    Socket.onOffline = function (data) {
+        var dialog = new Dialog({
+            title: data.nickName + "掉线，您赢了！", buttons: [{
+                text: '重新开始',
+                handler: function () {
+                    Gobang.restart();
+                    Socket.restart();
+                    dialog.close();
+                }
+            }],
+        }).show();
+        showUser(null, 'enemy');
+    }
+
     $("#towelBtn").onclick = function () {
         var dialog = new Dialog({
             title: '您确定要认输吗？',
@@ -380,6 +411,14 @@ window.onload = function () {
             }]
         }).show();
     }
+
+
+    setInterval(function () {
+        if (roomId && roomId != "") {
+            Socket.sendHeartbeat();
+        }
+    }, 1000);
+
 }
 
 window.start = function () {

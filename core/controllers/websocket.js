@@ -4,8 +4,9 @@ var rooms = require("../rooms");
 
 var models = require("../models");
 var User = models.User;
-
+var EventProxy = require("eventproxy");
 var sockets = {};
+
 
 /**
  * 发送消息
@@ -53,41 +54,58 @@ function onMatch(user, socket) {
 
 
     room.status = true;
-    socket.emit("match", room);
-
-    //查询u1和u2的资料，下发给2个用户
-    var u1 = room.user1.uid;
-    var u2 = room.user2.uid;
-
-    //查询资料
-    var self = user.uid;
-
-    var type = "";
-    var to = null;
-    if (self == u1) {
-        to = u2;
-        type = "user1";
-    } else {
-        to = u1;
-        type = "user2";
-    }
 
 
-    function send(user) {
-        sendMessage("join", to, user)
-    }
+    //查询2个玩家的资料
+    var porxy = new EventProxy();
+    porxy.all("data1", "data2", function (data1, data2) {
 
-    //将自己的资料发给对家
-    if (!room.data) {
+        room.user1.data = data1;
+        room.user2.data = data2;
 
-        findOne(self, function (err, data) {
-            if (!err) {
-                rooms.get(room.id)[type]["data"] = data;
-                send(data);
-            }
+        socket.emit("match", room);
+
+        //查询u1和u2的资料，下发给2个用户
+        var u1 = room.user1.uid;
+        var u2 = room.user2.uid;
+
+        //查询资料
+        var self = user.uid;
+
+        var type = "";
+        var to = null;
+        if (self == u1) {
+            to = u2;
+            type = "user1";
+        } else {
+            to = u1;
+            type = "user2";
+        }
+
+
+        function send(user) {
+            sendMessage("join", to, user)
+        }
+
+        send(room[type].data);
+    });
+
+
+    //查询2个玩家的资料
+    if (!room.user1.data && room.user1.uid != "") {
+        User.findOne({uid: room.user1.uid}).then(function (data) {
+            porxy.emit("data1", data);
         });
     } else {
-        send(room[type]);
+        porxy.emit("data1", room.user1.data);
+    }
+
+    if (!room.user2.data && room.user2.uid != "") {
+        User.findOne({uid: room.user2.uid}).then(function (data) {
+            porxy.emit("data2", data);
+        });
+    } else {
+        porxy.emit("data2", room.user2.data);
     }
 
 
@@ -125,8 +143,10 @@ function onPices(data) {
     //将位置发给对家
     sendMessage("pices", data.enemyUid, data);
     //记录
+
     rooms.get(data.roomId).board[data.y][data.x] = data.type;
     rooms.get(data.roomId).lastType = data.type;
+    rooms.get(data.roomId).lastTime = new Date().getTime();
 }
 
 /**
@@ -164,6 +184,22 @@ function onAction(data) {
     }
 }
 
+/**
+ * 心跳
+ * @param data
+ * @constructor
+ */
+function onHeartbeat(data) {
+// console.log("收到心跳"+JSON.stringify(data))
+    var room = rooms.get(data.roomId);
+    if (room.user1.uid == data.uid) {
+        room.user1.lastTime = new Date();
+    } else {
+        room.user2.lastTime = new Date();
+    }
+    // console.log(room)
+}
+
 exports.start = function () {
 
 
@@ -194,7 +230,28 @@ exports.start = function () {
         //和棋、认输
         socket.on("action", onAction);
 
+        //心跳
+        socket.on("heartbeat", onHeartbeat);
+
     });
 
     console.log("启动ok")
+
+    // //定时踢人
+    setInterval(function () {
+        rooms.checkTimeout(function (array) {
+            for (var i in array) {
+                var item = array[i];
+                /*
+                 roomId: item.id,
+                 nickName: item.user1.data.nickName,
+                 to: item.user1.uid,
+                 from: item.user2.uid
+                 */
+                console.log(item)
+                sendMessage("offline", item.to, item);
+            }
+        });
+    }, 1000);
+
 }

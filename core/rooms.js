@@ -22,12 +22,14 @@ var rooms = {
                 user1: {
                     data: null,
                     uid: "",
-                    type: 0
+                    type: 0,
+                    lastTime: 0//最后活跃时间
                 },
                 user2: {
                     data: null,
                     uid: "",
-                    type: 1
+                    type: 1,
+                    lastTime: 0//最后活跃时间
                 },
                 id: i,
                 board: array, //棋盘
@@ -60,19 +62,60 @@ var rooms = {
         for (var i in this._data) {
             var item = this._data[i];
 
-
             if (item.user1.uid == "" || item.user1.uid == uid) {
                 item.user1.uid = uid;
-
+                item.user1.lastTime = new Date().getTime();
                 return item;
             } else if (item.user2.uid == "" || item.user2.uid == uid) {
 
                 item.user2.uid = uid;
+                item.user2.lastTime = new Date().getTime();
+
                 return item;
             }
 
+
         }
         return null;
+    },
+    checkTimeout: function (cb) {
+
+        var time = new Date().getTime();
+        var array = [];
+        for (var i in this._data) {
+            var item = this._data[i];
+            if (item.user1.uid != "") {
+                if (time - item.user1.lastTime >= 1000 * 20) {
+                    if (item.user2.data) {
+                        array.push({
+                            roomId: item.id,
+                            nickName: item.user1.data.nickName,
+                            to: item.user2.uid,
+                            from: item.user1.uid
+                        })
+                    }
+                    item.user1.uid = "";
+                    item.user1.data = null;
+                }
+            }
+
+            if (item.user2.uid != "") {
+                if (time - item.user2.lastTime >= 1000 * 20) {
+                    if (item.user1.data) {
+                        array.push({
+                            roomId: item.id,
+                            nickName: item.user2.data.nickName,
+                            to: item.user1.uid,
+                            from: item.user2.uid
+                        })
+                    }
+                    item.user2.uid = "";
+                    item.user2.data = null;
+                }
+            }
+        }
+
+        cb(array);
     }
 }
 
