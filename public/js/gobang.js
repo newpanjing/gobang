@@ -90,6 +90,12 @@ var Gobang = {
         }
     },
     onmousemove: function (e) {
+
+        //不是我方，不显示框框
+        if (_lastType == picesType) {
+            return;
+        }
+
         var _self = Gobang;
         if (!_self._selectBox) {
             return;
@@ -166,6 +172,7 @@ var Gobang = {
             var sign = Gobang.createPices(x, y);
             if (sign) {
                 _lastType = picesType;
+                Gobang._selectBox.style.display = "none";
             }
         }
 
@@ -357,7 +364,7 @@ var Gobang = {
 
     }
     ,
-    handlerStep: function (x, y, type) {
+    handlerStep: function (x, y, type, notice) {
         //上下
         var sign = 0;
         if (this.countSuccessY(x, y, type) >= 5) {
@@ -375,10 +382,17 @@ var Gobang = {
             this.runing = false;
             var str = (type == 0 ? "黑棋" : "白棋") + "赢了";
             this.showMaskDialog(str);
+
+            //只用一方通知
+            if (!notice) {
+                this.onVictory(type);
+            }
         }
 
-    }
-    ,
+    },
+    onVictory: function (type) {
+
+    },
     createPices: function (x, y) {
 
 
@@ -427,6 +441,10 @@ var Gobang = {
         x = point.pointX;
         y = point.pointY;
 
+        //小原点跟随
+        $("#pointMe").style.left = (x / 2 - 4) + "px";
+        $("#pointMe").style.top = (y / 2 - 4) + "px";
+
         x -= this.params.pieces / 2;
         y -= this.params.pieces / 2;
 
@@ -436,6 +454,7 @@ var Gobang = {
 
         this.ctx.drawImage(img, x, y, w, h);
         this.handlerStep(px, py, type);
+
 
         Socket.pices(px, py, type);
 
@@ -454,6 +473,12 @@ var Gobang = {
         var x = point.pointX;
         var y = point.pointY;
 
+        //小原点跟随
+        $("#pointEnemy").style.left = (x / 2 - 4) + "px";
+        $("#pointEnemy").style.top = (y / 2 - 4) + "px";
+
+        this._selectBox.style.display = "block";
+
         x -= this.params.pieces / 2;
         y -= this.params.pieces / 2;
 
@@ -463,7 +488,7 @@ var Gobang = {
 
         this.ctx.drawImage(img, x, y, w, h);
         this.board[py][px] = type;
-        this.handlerStep(px, py, type);
+        this.handlerStep(px, py, type, true);
 
 
     }
@@ -520,6 +545,9 @@ var Gobang = {
         // this.initMask();
     }
     ,
+    onRestart:function () {
+
+    },
     //重新开始
     restart: function () {
 
@@ -528,6 +556,10 @@ var Gobang = {
         this.createBackgroup();
 
         this.hideMaskDialog();
+
+        $("#pointEnemy").style = "left:-20px;top:-20px";
+        $("#pointMe").style = "left:-20px;top:-20px";
+        this.onRestart();
     }
     ,
     getPoint: function (x, y) {

@@ -165,3 +165,14 @@ canvas {
     pointer-events: none;
     cursor: default;
 }
+.point{
+    position: absolute;
+    background-color: rgba(15, 156, 255, 0.83);
+    width: 8px;
+    height: 8px;
+    border-radius: 20px;
+    z-index: 1;
+    pointer-events: none;
+    left: -20px;
+    top:-20px;
+}

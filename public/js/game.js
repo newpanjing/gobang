@@ -112,13 +112,14 @@ window.onload = function () {
             msgbox.scrollTop = msgbox.scrollHeight;
 
         },
-        action: function (type) {
+        action: function (type, data) {
             this.connection.emit("action", {
                 uid: _user.uid,
                 nickName: _user.nickName,
                 roomId: roomId,
                 enemyUid: enemyUid,
                 type: type,//0 同意，1 拒绝
+                victoryType: data
             })
         },
         onAction: function (data) {
@@ -225,7 +226,7 @@ window.onload = function () {
         if (isNaN(value)) {
             value = 0;
         }
-        value = parseFloat(value).toFixed(2);
+        value = parseFloat(value*100).toFixed(2);
 
         var html = '<img class="avatar" src="' + user.avatar + '"/>';
         html += '<div>';
@@ -241,7 +242,7 @@ window.onload = function () {
         html += '<div>' + user.location + '</div>';
         html += '<div>赢：' + user.victory + ' 输：' + user.failure + ' 和：' + user.draw + '</div>';
         html += '<div>胜率：' + value + '%</div>';
-        html += '<div>步时：02:00</div>';
+        // html += '<div>步时：02:00</div>';
 
         document.getElementById(id).innerHTML = html;
     }
@@ -412,6 +413,17 @@ window.onload = function () {
         }).show();
     }
 
+    Gobang.onVictory = function (type) {
+        Socket.action(3, type)
+    }
+
+
+    //更新资料
+    Gobang.onRestart = function () {
+        Socket.match();
+        //求和按钮重新启用，一局只能求和一次，同意或拒绝都是一次
+        $("#drawBtn").className="btn";
+    };
 
     setInterval(function () {
         if (roomId && roomId != "") {

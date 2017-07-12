@@ -172,15 +172,85 @@ function onDraw(data) {
  * @param data
  */
 function onAction(data) {
+    console.log("data:");
+    console.log(data);
+
     sendMessage("action", data.enemyUid, data);
     if (data.type == 0) {
 
         //数据库记录更新
+        //更新数据库记录
+
+        //更新双方平局+1
+        var room=rooms.get(data.roomId);
+        room.user1.data.draw+=1;
+        room.user2.data.draw+=1;
+
+        User.update({uid: data.uid}, {$inc: {draw: 1}}).then(function (err,rs) {
+            // console.log(err)
+            // console.log(rs)
+        });
+        User.update({uid: data.enemyUid}, {$inc: {draw: 1}}).then(function (err,rs) {
+            // console.log(err)
+            // console.log(rs)
+        });
 
         rooms.clearBorad(data.roomId);
     } else if (data.type == 2) {
+        console.log(data)
         //投降
+        var uid= data.uid;
+        var enemyUid=data.enemyUid;
+
+        //内存更新
+        var room=rooms.get(data.roomId);
+        if(room.user1.uid==uid){
+            room.user1.data.failure+=1;
+            room.user2.data.victory+=1;
+        }else{
+            room.user2.data.failure+=1;
+            room.user1.data.victory+=1;
+        }
+
+        User.update({uid: uid}, {$inc: {failure: 1}}).then(function (err,rs) {
+            // console.log(err)
+            // console.log(rs)
+        });
+        User.update({uid: enemyUid}, {$inc: {victory: 1}}).then(function (err,rs) {
+            // console.log(err)
+            // console.log(rs)
+        });
         rooms.clearBorad(data.roomId);
+    } else if (data.type == 3) {
+        //胜利
+        var room = rooms.get(data.roomId);
+        var victoryUid = "";
+        var failureUid = "";
+
+        if (room.user1.type == data.victoryType) {
+            victoryUid = room.user1.uid;
+            failureUid = room.user2.uid;
+
+            room.user1.data.victory += 1;
+            room.user2.data.failure += 1;
+
+        } else {
+            victoryUid = room.user2.uid;
+            failureUid = room.user1.uid;
+
+            room.user2.data.victory += 1;
+            room.user1.data.failure += 1;
+        }
+
+        //更新数据库记录
+        User.update({uid: victoryUid}, {$inc: {victory: 1}}).then(function (err,rs) {
+            // console.log(err)
+            // console.log(rs)
+        });
+        User.update({uid: failureUid}, {$inc: {failure: 1}}).then(function (err,rs) {
+            // console.log(err)
+            // console.log(rs)
+        });
     }
 }
 
@@ -227,11 +297,12 @@ exports.start = function () {
         socket.on("restart", onRestart);
         socket.on("draw", onDraw);
 
-        //和棋、认输
+        //和棋、认输、胜利
         socket.on("action", onAction);
 
         //心跳
         socket.on("heartbeat", onHeartbeat);
+
 
     });
 
