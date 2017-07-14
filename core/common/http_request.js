@@ -244,6 +244,7 @@ var httpsGet = function (str, data, callback, headers) {
                 str += buffer.toString();
             });
             res.on("end", function () {
+                console.log("str:" + str);
                 callback(str);
             })
         }

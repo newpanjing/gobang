@@ -17,6 +17,13 @@ var config = {
             api: 'https://api.weibo.com/oauth2',//接口地址
             api2: "https://api.weibo.com/2",//接口地址2
             redirectUri: 'http://gobang.88cto.com/oauth/weibo/callback'  //授权成功回调地址
+        },
+        qq:{
+            appId:'101409125',
+            appKey:'3ac4c01094df2fd58fecf3c972578f6b',
+            redirect_uri: 'http://gobang.88cto.com/auth/qq/callback',
+            api: 'https://graph.qq.com/oauth2.0',
+            api2: 'https://graph.qq.com'
         }
     },
     redis: {

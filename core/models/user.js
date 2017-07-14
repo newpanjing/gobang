@@ -31,6 +31,11 @@ var User = new Schema({
     draw: {//平局
         type: Number,
         default: 0
+    },
+    //开发平台类型
+    openType:{
+        type:Number,
+        default:0 //0=微博，1=QQ
     }
 });
 

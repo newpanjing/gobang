@@ -8,8 +8,12 @@ router.get('/', function (req, res, next) {
 });
 
 var oauth = require('../core/controllers/oauth');
+
 router.get('/oauth/weibo', oauth.weiboAuth);
 router.get('/oauth/weibo/callback', oauth.weiboCallback);
+
+router.get('/oauth/qq', oauth.qqAuth);
+router.get('/auth/qq/callback', oauth.qqCallback);
 
 
 var websocket = require('../core/controllers/websocket');

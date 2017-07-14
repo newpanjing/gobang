@@ -237,9 +237,15 @@ window.onload = function () {
             html += '<span class="icon-white"></span>';
         }
 
-        html += '<a href="https://weibo.com/' + user.uid + '" target="_blank"><span>' + user.nickName + '</span></a>';
+        if(user.openType==0){
+            html += '<a href="https://weibo.com/' + user.uid + '" target="_blank"><span>' + user.nickName + '</span></a>';
+        }else{
+            html += '<a href="javascript:void(0);" target="_blank"><span>' + user.nickName + '</span></a>';
+        }
         html += '</div>';
-        html += '<div>' + user.location + '</div>';
+        if(user.location){
+            html += '<div>' + user.location + '</div>';
+        }
         html += '<div>赢：' + user.victory + ' 输：' + user.failure + ' 和：' + user.draw + '</div>';
         html += '<div>胜率：' + value + '%</div>';
         // html += '<div>步时：02:00</div>';
@@ -287,6 +293,11 @@ window.onload = function () {
         var dialog = new Dialog({
             title: '您还没有登录！',
             buttons: [{
+                text: 'QQ登录',
+                handler: function () {
+                    window.location.href = "/oauth/qq";
+                }
+            },{
                 text: '微博登录',
                 handler: function () {
                     window.location.href = "/oauth/weibo";

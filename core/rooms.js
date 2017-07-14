@@ -84,6 +84,11 @@ var rooms = {
         var array = [];
         for (var i in this._data) {
             var item = this._data[i];
+
+            //掉线后更新棋盘
+            //更新战绩
+            //储存战绩
+
             if (item.user1.uid != "") {
                 if (time - item.user1.lastTime >= 1000 * 20) {
                     if (item.user2.data) {
