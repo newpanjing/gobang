@@ -18,5 +18,5 @@
 
 ## redis：
 >session共享，可以实现多实例部署
-## mongodd：
+## mongodb：
 >	储存用户资料，战绩等。
